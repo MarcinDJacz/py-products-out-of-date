@@ -33,7 +33,7 @@ import pytest
 def test_outdated_products(mocked_date: Mock,
                            product_list: dict,
                            today_date: datetime,
-                           expected: list) -> None:
+                           expected: list[str]) -> None:
     mocked_date.today.return_value = today_date
     assert outdated_products(product_list) == expected
 
@@ -67,6 +67,6 @@ def test_outdated_products(mocked_date: Mock,
 def test_outdated_products_equal_date(mocked_date: Mock,
                                       product_list: dict,
                                       today_date: datetime,
-                                      expected: list) -> None:
+                                      expected: list[str]) -> None:
     mocked_date.today.return_value = today_date
     assert outdated_products(product_list) == expected
