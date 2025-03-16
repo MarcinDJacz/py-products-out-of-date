@@ -1,22 +1,11 @@
 from app.main import outdated_products
 import datetime
-import pytest
+from unittest.mock import patch, Mock
 
 
-fake_time = datetime.datetime(2000, 1, 1)
-
-
-@pytest.fixture
-def patch_datetime_now(monkeypatch: None) -> datetime:
-    class MyDatetime(datetime.datetime):
-        @classmethod
-        def now(cls) -> datetime:
-            return fake_time
-    monkeypatch.setattr(datetime, "datetime", MyDatetime)
-
-
-def test_outdated_products(patch_datetime_now: None) -> None:
-    fake_time = datetime.datetime(2000, 1, 1)
+@patch("app.main.datetime.date")
+def test_outdated_products(mocked_date: Mock) -> None:
+    mocked_date.today.return_value = datetime.datetime(2000, 1, 1)
     all_products = [
         {
             "name": "salmon",
@@ -36,8 +25,7 @@ def test_outdated_products(patch_datetime_now: None) -> None:
     ]
     result = outdated_products(all_products)
     assert result == [x["name"] for x in all_products]
+    mocked_date.today.return_value = datetime.datetime(2025, 1, 1)
 
-    fake_time = datetime.datetime(2025, 1, 1)
-    fake_time.weekday()
     result = outdated_products(all_products)
     assert result == []
